@@ -148,6 +148,15 @@ Open your preferred web browser (Chrome, Edge, Firefox) and navigate to:
 http://127.0.0.1:5000
 ```
 
+### 🌐 Share with Anyone (Public HTTPS Link)
+To share JobNest with anyone over the internet without setting up a domain:
+- **Command Prompt:** Double-click [`share.bat`](file:///C:/Users/shali/.gemini/antigravity/scratch/jobnest/share.bat)
+- **PowerShell / Terminal:**
+  ```powershell
+  ssh -T -o StrictHostKeyChecking=no -R 80:127.0.0.1:5000 nokey@localhost.run
+  ```
+  It will output an instant public HTTPS link (e.g. `https://your-tunnel.lhr.life`) that anyone on any device can open.
+
 ---
 
 ## 🔑 Pre-Configured Demo Accounts
