@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}Moderate Job Listings – Administrator Hub – JobNest{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+
+  <!-- Sidebar -->
+  <aside class="dashboard-sidebar">
+    <div class="sidebar-profile">
+      <div class="sidebar-avatar" style="background: linear-gradient(135deg, #ef4444, #b91c1c);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+      </div>
+      <div class="sidebar-user-info">
+        <h4>{{ current_user.full_name }}</h4>
+        <span class="sidebar-user-role" style="color: var(--danger); font-weight: 700;">System Administrator</span>
+      </div>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li class="sidebar-item">
+        <a href="{{ url_for('admin.dashboard') }}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          Overview & Stats
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a href="{{ url_for('admin.users') }}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          Manage Users
+        </a>
+      </li>
+      <li class="sidebar-item active">
+        <a href="{{ url_for('admin.jobs') }}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+          Moderate Job Listings
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <a href="{{ url_for('auth.logout') }}" class="btn btn-outline btn-sm btn-block text-danger">Sign Out</a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    <div class="dashboard-header">
+      <div class="dashboard-title-area">
+        <h1>Job Listings Moderation</h1>
+        <p>Review, feature, update, or remove job postings across all registered companies</p>
+      </div>
+      <div>
+        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline">Back to Analytics</a>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="card" style="margin-bottom: 2rem;">
+      <div class="card-body" style="padding: 1.25rem 1.5rem;">
+        <form action="{{ url_for('admin.jobs') }}" method="GET" class="flex items-center gap-3 flex-wrap">
+          <div style="flex: 1; min-width: 240px;">
+            <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Search by job title or company name...">
+          </div>
+          <div>
+            <select name="category" class="form-select" style="min-width: 170px;">
+              <option value="All">All Categories</option>
+              <option value="IT & Software" {% if category == 'IT & Software' %}selected{% endif %}>IT & Software</option>
+              <option value="Finance & Accounting" {% if category == 'Finance & Accounting' %}selected{% endif %}>Finance & Accounting</option>
+              <option value="Healthcare & Medicine" {% if category == 'Healthcare & Medicine' %}selected{% endif %}>Healthcare & Medicine</option>
+              <option value="Marketing & Sales" {% if category == 'Marketing & Sales' %}selected{% endif %}>Marketing & Sales</option>
+              <option value="Engineering" {% if category == 'Engineering' %}selected{% endif %}>Engineering</option>
+              <option value="Human Resources" {% if category == 'Human Resources' %}selected{% endif %}>Human Resources</option>
+              <option value="Design & Creative" {% if category == 'Design & Creative' %}selected{% endif %}>Design & Creative</option>
+              <option value="Operations & Management" {% if category == 'Operations & Management' %}selected{% endif %}>Operations & Management</option>
+            </select>
+          </div>
+          <div>
+            <select name="status" class="form-select" style="min-width: 140px;">
+              <option value="All">All Statuses</option>
+              <option value="Active" {% if status == 'Active' %}selected{% endif %}>Active</option>
+              <option value="Closed" {% if status == 'Closed' %}selected{% endif %}>Closed</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Filter</button>
+          {% if q or category or status %}
+            <a href="{{ url_for('admin.jobs') }}" class="btn btn-outline">Reset</a>
+          {% endif %}
+        </form>
+      </div>
+    </div>
+
+    <!-- Listings Table -->
+    <div class="card">
+      <div class="card-header">
+        <h3 style="font-size: 1.15rem;">All Job Listings ({{ jobs | length }})</h3>
+      </div>
+      
+      <div class="table-responsive">
+        {% if jobs %}
+          <table class="dash-table">
+            <thead>
+              <tr>
+                <th>Job Title & Company</th>
+                <th>Category</th>
+                <th>Type & Location</th>
+                <th>Status</th>
+                <th>Featured</th>
+                <th>Applicants</th>
+                <th style="text-align: right;">Moderation Controls</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for j in jobs %}
+                <tr>
+                  <td>
+                    <a href="{{ url_for('jobs.details', job_id=j.id) }}" target="_blank" style="font-weight: 700; color: var(--secondary);">
+                      {{ j.job_title }}
+                    </a>
+                    <div class="text-muted" style="font-size: 0.8rem;">
+                      {{ j.company.company_name }} • Posted {{ j.created_at | format_date }}
+                    </div>
+                  </td>
+                  <td>{{ j.category }}</td>
+                  <td>
+                    <div>{{ j.location }}</div>
+                    <span class="badge badge-secondary" style="font-size: 0.75rem;">{{ j.employment_type }}</span>
+                  </td>
+                  <td>
+                    <span class="badge {{ j.status | status_badge_class }}">{{ j.status }}</span>
+                  </td>
+                  <td>
+                    {% if j.is_featured %}
+                      <span class="badge badge-primary">Featured</span>
+                    {% else %}
+                      <span class="text-muted" style="font-size: 0.85rem;">Standard</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <span style="font-weight: 700;">{{ j.applications.count() }}</span>
+                  </td>
+                  <td style="text-align: right;">
+                    <div class="flex items-center justify-center gap-1" style="justify-content: flex-end;">
+                      <!-- Toggle Featured -->
+                      <form action="{{ url_for('admin.toggle_featured', job_id=j.id) }}" method="POST" style="display: inline;">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-sm btn-outline" title="{{ 'Unfeature' if j.is_featured else 'Feature' }}">
+                          {{ '★ Unfeature' if j.is_featured else '☆ Feature' }}
+                        </button>
+                      </form>
+
+                      <!-- Edit -->
+                      <a href="{{ url_for('jobs.edit_job', job_id=j.id) }}" class="btn btn-sm btn-outline" title="Edit Listing">
+                        Edit
+                      </a>
+
+                      <!-- Delete -->
+                      <form action="{{ url_for('admin.delete_job', job_id=j.id) }}" method="POST" style="display: inline;" data-confirm="Are you sure you want to permanently remove job listing '{{ j.job_title }}'?">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-sm btn-outline text-danger" title="Remove Job">
+                          Remove
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <div style="padding: 3rem 1.5rem; text-align: center;">
+            <p class="text-muted" style="margin: 0;">No job listings found.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+  </main>
+</div>
+{% endblock %}

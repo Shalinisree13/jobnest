@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Browse All Jobs – JobNest{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 2.5rem 1.5rem 4rem;">
+  
+  <!-- Header & Search Controls -->
+  <div style="margin-bottom: 2rem;">
+    <h1 style="font-size: 2.25rem; margin-bottom: 0.5rem;">Explore Career Opportunities</h1>
+    <p class="text-muted" style="font-size: 1.05rem;">
+      Browse {{ total_results }} active position{{ 's' if total_results != 1 else '' }} matching your criteria
+    </p>
+  </div>
+
+  <!-- Filter Card -->
+  <div class="card" style="margin-bottom: 2.5rem; background-color: var(--bg-surface);">
+    <div class="card-body" style="padding: 1.25rem 1.5rem;">
+      <form action="{{ url_for('jobs.index') }}" method="GET">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) auto; gap: 1rem; align-items: flex-end;">
+          
+          <!-- Keyword -->
+          <div>
+            <label class="form-label" style="font-size: 0.8rem;">Job Title / Skills</label>
+            <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="e.g. Python, Engineer, Designer">
+          </div>
+
+          <!-- Location -->
+          <div>
+            <label class="form-label" style="font-size: 0.8rem;">Location</label>
+            <input type="text" name="location" value="{{ location }}" class="form-control" placeholder="e.g. San Francisco or Remote">
+          </div>
+
+          <!-- Category -->
+          <div>
+            <label class="form-label" style="font-size: 0.8rem;">Industry Category</label>
+            <select name="category" class="form-select">
+              <option value="All">All Categories</option>
+              {% for cat in categories %}
+                <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- Employment Type -->
+          <div>
+            <label class="form-label" style="font-size: 0.8rem;">Job Type</label>
+            <select name="employment_type" class="form-select">
+              <option value="All">All Types</option>
+              {% for et in employment_types %}
+                <option value="{{ et }}" {% if selected_employment_type == et %}selected{% endif %}>{{ et }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- Sort -->
+          <div>
+            <label class="form-label" style="font-size: 0.8rem;">Sort By</label>
+            <select name="sort" class="form-select">
+              <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest First</option>
+              <option value="salary_high" {% if sort == 'salary_high' %}selected{% endif %}>Highest Salary</option>
+              <option value="salary_low" {% if sort == 'salary_low' %}selected{% endif %}>Lowest Salary</option>
+              <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>Oldest First</option>
+            </select>
+          </div>
+
+          <!-- Submit / Reset -->
+          <div class="flex gap-2">
+            <button type="submit" class="btn btn-primary" style="height: 42px;">Filter</button>
+            {% if q or location or selected_category or selected_employment_type or sort != 'newest' %}
+              <a href="{{ url_for('jobs.index') }}" class="btn btn-outline" style="height: 42px;" title="Reset filters">Reset</a>
+            {% endif %}
+          </div>
+
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Job Listings Grid -->
+  {% if jobs %}
+    <div class="jobs-grid">
+      {% for job in jobs %}
+        <div class="job-card">
+          <div>
+            <div class="job-card-header">
+              <div class="flex items-center gap-3">
+                <div class="company-badge-box">
+                  {{ job.company.company_name[0] | upper }}
+                </div>
+                <div>
+                  <h3 class="job-card-title">
+                    <a href="{{ url_for('jobs.details', job_id=job.id) }}">{{ job.job_title }}</a>
+                  </h3>
+                  <div class="job-company-name">{{ job.company.company_name }}</div>
+                </div>
+              </div>
+              <span class="badge badge-info">{{ job.employment_type }}</span>
+            </div>
+
+            <div class="job-meta-list">
+              <div class="job-meta-item">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <span>{{ job.location }}</span>
+              </div>
+              <div>•</div>
+              <div class="job-meta-item">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                <span>{{ job.category }}</span>
+              </div>
+              <div>•</div>
+              <div class="job-meta-item">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span>{{ job.created_at | timeago }}</span>
+              </div>
+            </div>
+
+            <p class="text-muted" style="font-size: 0.9rem; margin-bottom: 1rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+              {{ job.job_description }}
+            </p>
+
+            <div class="job-skills-tags">
+              {% for skill in job.get_skills_list()[:4] %}
+                <span class="skill-tag">{{ skill }}</span>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="job-card-footer">
+            <div class="job-salary-text">
+              {{ job.salary_display() }}
+            </div>
+            <a href="{{ url_for('jobs.details', job_id=job.id) }}" class="btn btn-outline-primary btn-sm">
+              View Details &rarr;
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="card text-center" style="padding: 4rem 1.5rem;">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-light)" stroke-width="1.5" style="margin: 0 auto 1.25rem;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <h3>No Job Postings Found</h3>
+      <p class="text-muted" style="max-width: 440px; margin: 0.5rem auto 1.5rem;">
+        We couldn't find any positions matching your search filters. Try adjusting your query keywords or clearing filter criteria.
+      </p>
+      <div>
+        <a href="{{ url_for('jobs.index') }}" class="btn btn-primary">Clear All Filters</a>
+      </div>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

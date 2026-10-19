@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}About JobNest – Modern Online Recruitment Platform{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 4rem 1.5rem 5rem; max-width: 900px;">
+  
+  <div class="text-center" style="margin-bottom: 3.5rem;">
+    <div class="hero-badge">Empowering Global Talent</div>
+    <h1 style="font-size: 2.75rem; margin-bottom: 1rem;">About JobNest</h1>
+    <p class="text-muted" style="font-size: 1.15rem; max-width: 680px; margin: 0 auto;">
+      JobNest is an enterprise-grade recruitment ecosystem engineered to connect ambitious job seekers with world-class employers through transparent, verified, and automated workflows.
+    </p>
+  </div>
+
+  <div class="card" style="margin-bottom: 2.5rem;">
+    <div class="card-body" style="padding: 2.5rem;">
+      <h2 style="font-size: 1.75rem; margin-bottom: 1rem;">Our Mission</h2>
+      <p style="font-size: 1.05rem; line-height: 1.8; color: var(--text-main); margin-bottom: 1.5rem;">
+        Recruitment should not be an endless cycle of lost emails and black-hole job applications. At JobNest, our mission is to deliver complete transparency, rapid matching, and secure candidate data management to the hiring lifecycle.
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+        <div style="background: var(--bg-surface-alt); padding: 1.5rem; border-radius: var(--radius-md);">
+          <div style="font-size: 1.75rem; color: var(--primary); font-weight: 800; margin-bottom: 0.5rem;">100%</div>
+          <h4 style="margin-bottom: 0.25rem;">Verified Listings</h4>
+          <p class="text-muted" style="font-size: 0.88rem; margin: 0;">Every job vacancy is registered by authenticated employers and monitored by administrators.</p>
+        </div>
+
+        <div style="background: var(--bg-surface-alt); padding: 1.5rem; border-radius: var(--radius-md);">
+          <div style="font-size: 1.75rem; color: var(--success); font-weight: 800; margin-bottom: 0.5rem;">Real-Time</div>
+          <h4 style="margin-bottom: 0.25rem;">Live Status Updates</h4>
+          <p class="text-muted" style="font-size: 0.88rem; margin: 0;">Candidates receive transparent updates from Shortlisting to Interview Scheduling and Offers.</p>
+        </div>
+
+        <div style="background: var(--bg-surface-alt); padding: 1.5rem; border-radius: var(--radius-md);">
+          <div style="font-size: 1.75rem; color: var(--accent); font-weight: 800; margin-bottom: 0.5rem;">Secure</div>
+          <h4 style="margin-bottom: 0.25rem;">Encrypted & Isolated</h4>
+          <p class="text-muted" style="font-size: 0.88rem; margin: 0;">Candidate resumes and personal contact details are protected with strict role-based access control.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center">
+    <h3 style="margin-bottom: 1rem;">Ready to join our growing network?</h3>
+    <div class="flex justify-center gap-3">
+      <a href="{{ url_for('jobs.index') }}" class="btn btn-primary">Browse Jobs</a>
+      <a href="{{ url_for('auth.register') }}" class="btn btn-outline">Create Free Account</a>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

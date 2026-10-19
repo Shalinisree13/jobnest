@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+
+{% block title %}Employer Dashboard – JobNest{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+
+  <!-- Sidebar -->
+  <aside class="dashboard-sidebar">
+    <div class="sidebar-profile">
+      <div class="sidebar-avatar" style="background: linear-gradient(135deg, var(--secondary), var(--primary));">
+        {{ company.company_name[0] | upper }}
+      </div>
+      <div class="sidebar-user-info">
+        <h4>{{ company.company_name }}</h4>
+        <span class="sidebar-user-role">Employer Account</span>
+      </div>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li class="sidebar-item active">
+        <a href="{{ url_for('employer.dashboard') }}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          Overview
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a href="{{ url_for('jobs.post_job') }}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+          Post New Vacancy
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a href="{{ url_for('employer.company_profile') }}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+          Company Profile
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a href="{{ url_for('jobs.index') }}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          Live Job Board
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div style="font-size: 0.8rem; color: var(--text-light); margin-bottom: 0.75rem;">
+        Recruiter: {{ user.full_name }}
+      </div>
+      <a href="{{ url_for('auth.logout') }}" class="btn btn-outline btn-sm btn-block text-danger">Sign Out</a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    
+    <div class="dashboard-header">
+      <div class="dashboard-title-area">
+        <h1>{{ company.company_name }} Recruitment Hub</h1>
+        <p>Manage job listings, review qualified applicants, and streamline hiring workflows</p>
+      </div>
+      <div class="flex gap-2">
+        <a href="{{ url_for('employer.company_profile') }}" class="btn btn-outline">Edit Company</a>
+        <a href="{{ url_for('jobs.post_job') }}" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Post a Vacancy
+        </a>
+      </div>
+    </div>
+
+    <!-- Stats KPI Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-info">
+          <p>Total Jobs</p>
+          <h3>{{ total_jobs }}</h3>
+        </div>
+        <div class="stat-icon blue">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-info">
+          <p>Active Listings</p>
+          <h3>{{ active_jobs }}</h3>
+        </div>
+        <div class="stat-icon green">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-info">
+          <p>Total Applicants</p>
+          <h3>{{ total_applications }}</h3>
+        </div>
+        <div class="stat-icon purple">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-info">
+          <p>Pending Review</p>
+          <h3>{{ under_review_count }}</h3>
+        </div>
+        <div class="stat-icon yellow">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-info">
+          <p>Shortlisted / Hired</p>
+          <h3>{{ shortlisted_count + hired_count }}</h3>
+        </div>
+        <div class="stat-icon cyan">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Company Posted Jobs Table -->
+    <div class="card" style="margin-bottom: 2.5rem;">
+      <div class="card-header">
+        <h3 style="font-size: 1.15rem;">My Posted Job Openings</h3>
+        <span class="badge badge-secondary">{{ jobs | length }} Positions</span>
+      </div>
+
+      <div class="table-responsive">
+        {% if jobs %}
+          <table class="dash-table">
+            <thead>
+              <tr>
+                <th>Job Title & Location</th>
+                <th>Category</th>
+                <th>Type</th>
+                <th>Applicants</th>
+                <th>Status</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for j in jobs %}
+                <tr>
+                  <td>
+                    <a href="{{ url_for('jobs.details', job_id=j.id) }}" style="font-weight: 700; color: var(--secondary);">
+                      {{ j.job_title }}
+                    </a>
+                    <div class="text-muted" style="font-size: 0.8rem;">
+                      {{ j.location }} • Posted {{ j.created_at | format_date }}
+                    </div>
+                  </td>
+                  <td>{{ j.category }}</td>
+                  <td><span class="badge badge-info">{{ j.employment_type }}</span></td>
+                  <td>
+                    <a href="{{ url_for('employer.applicants', job_id=j.id) }}" class="btn btn-sm btn-outline-primary" style="font-weight: 700;">
+                      {{ j.applications.count() }} Applicant{{ 's' if j.applications.count() != 1 else '' }} &rarr;
+                    </a>
+                  </td>
+                  <td>
+                    <span class="badge {{ j.status | status_badge_class }}">{{ j.status }}</span>
+                  </td>
+                  <td style="text-align: right;">
+                    <div class="flex items-center justify-center gap-1" style="justify-content: flex-end;">
+                      <a href="{{ url_for('employer.applicants', job_id=j.id) }}" class="btn btn-sm btn-primary" title="View Candidate Resumes">
+                        Candidates
+                      </a>
+                      <a href="{{ url_for('jobs.edit_job', job_id=j.id) }}" class="btn btn-sm btn-outline" title="Edit Job">
+                        Edit
+                      </a>
+                      <form action="{{ url_for('jobs.toggle_status', job_id=j.id) }}" method="POST" style="display: inline;">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-sm btn-outline" title="Toggle Active / Closed">
+                          {{ 'Close' if j.status == 'Active' else 'Open' }}
+                        </button>
+                      </form>
+                      <form action="{{ url_for('jobs.delete_job', job_id=j.id) }}" method="POST" style="display: inline;" data-confirm="Are you sure you want to permanently delete '{{ j.job_title }}'? All applications will also be deleted.">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-sm btn-outline text-danger" title="Delete Job">
+                          Delete
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <div style="padding: 3rem 1.5rem; text-align: center;">
+            <p class="text-muted" style="margin-bottom: 1rem;">You have not published any job openings yet.</p>
+            <a href="{{ url_for('jobs.post_job') }}" class="btn btn-primary btn-sm">Create First Job Listing</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Recent Candidate Applications Feed -->
+    <div class="card">
+      <div class="card-header">
+        <h3 style="font-size: 1.15rem;">Recent Applications Received</h3>
+        <span class="text-muted" style="font-size: 0.85rem;">Across all your listings</span>
+      </div>
+
+      <div class="table-responsive">
+        {% if applications %}
+          <table class="dash-table">
+            <thead>
+              <tr>
+                <th>Applicant Name</th>
+                <th>Target Job</th>
+                <th>Applied Date</th>
+                <th>Current Status</th>
+                <th>Submitted Resume</th>
+                <th style="text-align: right;">Review</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for app in applications %}
+                <tr>
+                  <td>
+                    <div style="font-weight: 700; color: var(--secondary);">{{ app.applicant.full_name }}</div>
+                    <div class="text-muted" style="font-size: 0.8rem;">{{ app.applicant.email }}</div>
+                  </td>
+                  <td>
+                    <a href="{{ url_for('jobs.details', job_id=app.job.id) }}" style="font-weight: 500;">
+                      {{ app.job.job_title }}
+                    </a>
+                  </td>
+                  <td>{{ app.applied_at | timeago }}</td>
+                  <td>
+                    <span class="badge {{ app.application_status | status_badge_class }}">
+                      {{ app.application_status }}
+                    </span>
+                  </td>
+                  <td>
+                    {% if app.resume_filename %}
+                      <a href="{{ url_for('main.view_resume', filename=app.resume_filename) }}" target="_blank" class="flex items-center gap-1" style="font-size: 0.85rem; font-weight: 600;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        PDF Resume
+                      </a>
+                    {% else %}
+                      <span class="text-muted">None</span>
+                    {% endif %}
+                  </td>
+                  <td style="text-align: right;">
+                    <a href="{{ url_for('employer.applicants', job_id=app.job.id) }}" class="btn btn-outline-primary btn-sm">
+                      Manage &rarr;
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <div style="padding: 2.5rem 1.5rem; text-align: center;">
+            <p class="text-muted" style="margin: 0;">No applications received yet. Qualified candidates will appear here as they apply.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+  </main>
+</div>
+{% endblock %}

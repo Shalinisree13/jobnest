@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: jobnest_app
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - SECRET_KEY=jobnest-production-secret-change-this-in-env
+      - FLASK_ENV=production
+    volumes:
+      - ./instance:/app/instance
+      - ./uploads:/app/uploads

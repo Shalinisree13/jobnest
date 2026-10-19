@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}Post a New Job Vacancy – JobNest{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 1.5rem 5rem;">
+  <div style="max-width: 820px; margin: 0 auto;">
+
+    <!-- Back / Navigation Link -->
+    <div style="margin-bottom: 1.5rem;">
+      <a href="{{ url_for('employer.dashboard') }}" class="text-muted flex items-center gap-1" style="font-size: 0.9rem; font-weight: 500;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        Back to Employer Dashboard
+      </a>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h2 style="font-size: 1.5rem; margin-bottom: 0.25rem;">Post a New Job Vacancy</h2>
+          <p class="text-muted" style="font-size: 0.9rem; margin: 0;">Publish an opening to reach thousands of qualified professionals</p>
+        </div>
+      </div>
+
+      <div class="card-body" style="padding: 2.25rem;">
+        <form method="POST" action="{{ url_for('jobs.post_job') }}">
+          {{ form.hidden_tag() }}
+
+          <!-- Job Title -->
+          <div class="form-group">
+            <label class="form-label" for="job_title">
+              Job Title <span class="required">*</span>
+            </label>
+            {{ form.job_title(class="form-control", id="job_title", placeholder="e.g. Senior Full Stack Software Engineer") }}
+            {% for error in form.job_title.errors %}
+              <span class="form-error">{{ error }}</span>
+            {% endfor %}
+          </div>
+
+          <!-- Category & Employment Type Grid -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;" class="form-row-grid">
+            <div class="form-group">
+              <label class="form-label" for="category">
+                Job Category <span class="required">*</span>
+              </label>
+              {{ form.category(class="form-select", id="category") }}
+              {% for error in form.category.errors %}
+                <span class="form-error">{{ error }}</span>
+              {% endfor %}
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="employment_type">
+                Employment Type <span class="required">*</span>
+              </label>
+              {{ form.employment_type(class="form-select", id="employment_type") }}
+              {% for error in form.employment_type.errors %}
+                <span class="form-error">{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Location & Deadline Grid -->
+          <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.25rem;" class="form-row-grid">
+            <div class="form-group">
+              <label class="form-label" for="location">
+                Job Location <span class="required">*</span>
+              </label>
+              {{ form.location(class="form-control", id="location", placeholder="e.g. San Francisco, CA or Remote") }}
+              {% for error in form.location.errors %}
+                <span class="form-error">{{ error }}</span>
+              {% endfor %}
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="application_deadline">Application Deadline</label>
+              {{ form.application_deadline(class="form-control", id="application_deadline", type="date") }}
+              {% for error in form.application_deadline.errors %}
+                <span class="form-error">{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Salary Min & Max -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;" class="form-row-grid">
+            <div class="form-group">
+              <label class="form-label" for="salary_min">Minimum Salary ($/yr)</label>
+              {{ form.salary_min(class="form-control", id="salary_min", placeholder="e.g. 90000") }}
+              {% for error in form.salary_min.errors %}
+                <span class="form-error">{{ error }}</span>
+              {% endfor %}
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="salary_max">Maximum Salary ($/yr)</label>
+              {{ form.salary_max(class="form-control", id="salary_max", placeholder="e.g. 130000") }}
+              {% for error in form.salary_max.errors %}
+                <span class="form-error">{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Required Skills -->
+          <div class="form-group">
+            <label class="form-label" for="required_skills">
+              Required Skills (comma separated) <span class="required">*</span>
+            </label>
+            {{ form.required_skills(class="form-control", id="required_skills", placeholder="e.g. Python, Flask, React, Docker, SQL") }}
+            {% for error in form.required_skills.errors %}
+              <span class="form-error">{{ error }}</span>
+            {% endfor %}
+            <div class="form-text">These tags help candidates discover this opening during search.</div>
+          </div>
+
+          <!-- Qualifications -->
+          <div class="form-group">
+            <label class="form-label" for="qualifications">
+              Qualifications & Requirements <span class="required">*</span>
+            </label>
+            {{ form.qualifications(class="form-control", id="qualifications", rows=4, placeholder="e.g. Bachelor's in Computer Science or equivalent, 3+ years production backend experience...") }}
+            {% for error in form.qualifications.errors %}
+              <span class="form-error">{{ error }}</span>
+            {% endfor %}
+          </div>
+
+          <!-- Job Description -->
+          <div class="form-group">
+            <label class="form-label" for="job_description">
+              Detailed Job Description <span class="required">*</span>
+            </label>
+            {{ form.job_description(class="form-control", id="job_description", rows=6, placeholder="Outline role responsibilities, day-to-day duties, team culture, and company benefits...") }}
+            {% for error in form.job_description.errors %}
+              <span class="form-error">{{ error }}</span>
+            {% endfor %}
+          </div>
+
+          <!-- Status & Feature Option -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; align-items: center; margin-bottom: 2rem;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="status">Listing Status</label>
+              {{ form.status(class="form-select", id="status") }}
+            </div>
+
+            <div style="padding-top: 1.5rem;">
+              <label class="form-check">
+                {{ form.is_featured() }}
+                <span style="font-weight: 600;">Feature this job on the homepage</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex justify-between items-center" style="padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+            <a href="{{ url_for('employer.dashboard') }}" class="btn btn-outline">Cancel</a>
+            {{ form.submit(class="btn btn-primary btn-lg") }}
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

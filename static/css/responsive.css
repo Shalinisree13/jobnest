@@ -1,0 +1,141 @@
+/* ==========================================================================
+   JobNest – Responsive Adaptations
+   Mobile & Tablet media queries
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .hero-title {
+    font-size: 2.75rem;
+  }
+
+  .search-form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .search-field:not(:last-child) {
+    border-right: none;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .how-it-works-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cta-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 860px) {
+  .dashboard-wrapper {
+    flex-direction: column;
+  }
+
+  .dashboard-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.25rem;
+  }
+
+  .sidebar-menu {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .sidebar-item a {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.85rem;
+  }
+
+  .sidebar-footer {
+    display: none;
+  }
+
+  .dashboard-main {
+    padding: 1.5rem 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 72px;
+    left: 0;
+    right: 0;
+    background: var(--bg-surface);
+    flex-direction: column;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+    gap: 1rem;
+  }
+
+  .nav-links.show {
+    display: flex;
+  }
+
+  .mobile-nav-toggle {
+    display: block;
+  }
+
+  .hero-section {
+    padding: 2.5rem 0 2rem;
+  }
+
+  .hero-title {
+    font-size: 2.15rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .search-form-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .search-field {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.65rem;
+  }
+
+  .jobs-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .category-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .cta-banner {
+    padding: 2rem 1.5rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}

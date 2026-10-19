@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Run JobNest (Flask)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/app.py",
+      "args": [],
+      "jinja": true,
+      "env": {
+        "FLASK_APP": "app.py",
+        "FLASK_ENV": "development",
+        "FLASK_DEBUG": "1"
+      },
+      "console": "integratedTerminal"
+    }
+  ]
+}

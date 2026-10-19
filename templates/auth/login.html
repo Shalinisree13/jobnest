@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Sign In – JobNest{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 4.5rem 1.5rem;">
+  <div style="max-width: 480px; margin: 0 auto;">
+    
+    <div class="card">
+      <div class="card-body" style="padding: 2.25rem 2rem;">
+        <div class="text-center" style="margin-bottom: 2rem;">
+          <h2 style="font-size: 1.85rem; margin-bottom: 0.5rem;">Welcome Back</h2>
+          <p class="text-muted" style="font-size: 0.95rem;">Sign in to access your JobNest account and dashboard</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('auth.login', next=request.args.get('next')) }}">
+          {{ form.hidden_tag() }}
+
+          <div class="form-group">
+            <label class="form-label" for="email">
+              Email Address <span class="required">*</span>
+            </label>
+            {{ form.email(class="form-control", id="email", placeholder="you@domain.com", autofocus=True) }}
+            {% for error in form.email.errors %}
+              <span class="form-error">{{ error }}</span>
+            {% endfor %}
+          </div>
+
+          <div class="form-group">
+            <div class="flex justify-between items-center" style="margin-bottom: 0.45rem;">
+              <label class="form-label" for="password" style="margin-bottom: 0;">
+                Password <span class="required">*</span>
+              </label>
+            </div>
+            {{ form.password(class="form-control", id="password", placeholder="Enter your password") }}
+            {% for error in form.password.errors %}
+              <span class="form-error">{{ error }}</span>
+            {% endfor %}
+          </div>
+
+          <div class="form-group" style="margin-top: 1rem; margin-bottom: 1.5rem;">
+            <label class="form-check">
+              {{ form.remember() }}
+              <span>Keep me signed in on this device</span>
+            </label>
+          </div>
+
+          {{ form.submit(class="btn btn-primary btn-block btn-lg") }}
+        </form>
+
+        <div class="text-center" style="margin-top: 1.5rem; font-size: 0.92rem; color: var(--text-muted);">
+          Don't have an account yet? 
+          <a href="{{ url_for('auth.register') }}" style="font-weight: 600;">Create an account</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Demo Accounts Assist Card -->
+    <div class="card" style="margin-top: 1.5rem; background-color: var(--bg-surface-alt); border-style: dashed;">
+      <div class="card-body" style="padding: 1.25rem;">
+        <div class="flex items-center gap-2" style="font-weight: 700; font-size: 0.88rem; color: var(--secondary); margin-bottom: 0.75rem;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          Quick Demo Accounts (Pre-configured):
+        </div>
+        <div style="font-size: 0.82rem; color: var(--text-muted); display: grid; gap: 0.4rem;">
+          <div><strong>Admin:</strong> <code>admin@jobnest.com</code> / <code>Admin@12345</code></div>
+          <div><strong>Employer:</strong> <code>employer1@techinnovations.com</code> / <code>Employer@12345</code></div>
+          <div><strong>Job Seeker:</strong> <code>alex.morgan@email.com</code> / <code>Seeker@12345</code></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

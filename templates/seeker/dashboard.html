@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+
+{% block title %}Candidate Dashboard – JobNest{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+
+  <!-- Sidebar -->
+  <aside class="dashboard-sidebar">
+    <div class="sidebar-profile">
+      <div class="sidebar-avatar">
+        {{ user.full_name[0] | upper }}
+      </div>
+      <div class="sidebar-user-info">
+        <h4>{{ user.full_name }}</h4>
+        <span class="sidebar-user-role">Candidate</span>
+      </div>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li class="sidebar-item active">
+        <a href="{{ url_for('seeker.dashboard') }}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          Overview
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a href="{{ url_for('seeker.profile') }}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          My Profile & Resume
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a href="{{ url_for('jobs.index') }}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          Search Jobs
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div style="font-size: 0.8rem; color: var(--text-light); margin-bottom: 0.75rem;">
+        Logged in as {{ user.email }}
+      </div>
+      <a href="{{ url_for('auth.logout') }}" class="btn btn-outline btn-sm btn-block text-danger">Sign Out</a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    
+    <div class="dashboard-header">
+      <div class="dashboard-title-area">
+        <h1>Welcome, {{ user.full_name.split()[0] }}!</h1>
+        <p>Monitor your job applications, application statuses, and personalized recommendations</p>
+      </div>
+      <a href="{{ url_for('jobs.index') }}" class="btn btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        Browse Vacancies
+      </a>
+    </div>
+
+    <!-- Profile Completion Banner -->
+    <div class="profile-completion-box">
+      <div>
+        <h3 style="font-size: 1.15rem; color: #fff; margin-bottom: 0.25rem;">
+          Profile Strength: {{ completion_pct }}%
+        </h3>
+        <p style="font-size: 0.88rem; color: #94a3b8; margin: 0;">
+          {% if completion_pct < 100 %}
+            Add your work experience, education, and PDF resume to boost your visibility with recruiters.
+          {% else %}
+            Great job! Your candidate profile is 100% complete and ready for employers to review.
+          {% endif %}
+        </p>
+        <div class="profile-progress-bar-bg">
+          <div class="profile-progress-bar-fill" style="width: {{ completion_pct }}%;"></div>
+        </div>
+      </div>
+      <div>
+        <a href="{{ url_for('seeker.profile') }}" class="btn btn-sm btn-primary" style="background: #fff; color: var(--secondary);">
+          {{ 'Edit Profile & Resume' if completion_pct == 100 else 'Complete Profile' }} &rarr;
+        </a>
+      </div>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-info">
+          <p>Total Applied</p>
+          <h3>{{ total_applied }}</h3>
+        </div>
+        <div class="stat-icon blue">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-info">
+          <p>Under Review</p>
+          <h3>{{ under_review }}</h3>
+        </div>
+        <div class="stat-icon yellow">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-info">
+          <p>Shortlisted</p>
+          <h3>{{ shortlisted }}</h3>
+        </div>
+        <div class="stat-icon cyan">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-info">
+          <p>Interviews</p>
+          <h3>{{ interview_scheduled }}</h3>
+        </div>
+        <div class="stat-icon purple">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-info">
+          <p>Offers / Hired</p>
+          <h3>{{ hired }}</h3>
+        </div>
+        <div class="stat-icon green">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Applications History Table -->
+    <div class="card" style="margin-bottom: 2.5rem;">
+      <div class="card-header">
+        <h3 style="font-size: 1.15rem;">My Application History</h3>
+        <span class="badge badge-secondary">{{ applications | length }} Applications</span>
+      </div>
+
+      <div class="table-responsive">
+        {% if applications %}
+          <table class="dash-table">
+            <thead>
+              <tr>
+                <th>Job Position</th>
+                <th>Company</th>
+                <th>Date Applied</th>
+                <th>Status</th>
+                <th>Resume Submitted</th>
+                <th style="text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for app in applications %}
+                <tr>
+                  <td>
+                    <a href="{{ url_for('jobs.details', job_id=app.job.id) }}" style="font-weight: 700; color: var(--secondary);">
+                      {{ app.job.job_title }}
+                    </a>
+                    <div class="text-muted" style="font-size: 0.8rem;">{{ app.job.location }} • {{ app.job.employment_type }}</div>
+                  </td>
+                  <td>
+                    <span style="font-weight: 600;">{{ app.job.company.company_name }}</span>
+                  </td>
+                  <td>{{ app.applied_at | format_date }}</td>
+                  <td>
+                    <span class="badge {{ app.application_status | status_badge_class }}">
+                      {{ app.application_status }}
+                    </span>
+                  </td>
+                  <td>
+                    {% if app.resume_filename %}
+                      <a href="{{ url_for('main.view_resume', filename=app.resume_filename) }}" target="_blank" class="flex items-center gap-1" style="font-size: 0.85rem; font-weight: 500;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        PDF Resume
+                      </a>
+                    {% else %}
+                      <span class="text-muted">None</span>
+                    {% endif %}
+                  </td>
+                  <td style="text-align: right;">
+                    {% if app.application_status not in ['Hired', 'Withdrawn', 'Rejected'] %}
+                      <form action="{{ url_for('seeker.withdraw_application', app_id=app.id) }}" method="POST" style="display: inline;" data-confirm="Are you sure you want to withdraw your application for {{ app.job.job_title }}?">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-outline btn-sm text-danger" title="Withdraw application">
+                          Withdraw
+                        </button>
+                      </form>
+                    {% else %}
+                      <span class="text-muted" style="font-size: 0.85rem;">Completed</span>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <div style="padding: 3rem 1.5rem; text-align: center;">
+            <p class="text-muted" style="margin-bottom: 1rem;">You have not applied for any positions yet.</p>
+            <a href="{{ url_for('jobs.index') }}" class="btn btn-primary btn-sm">Find Jobs to Apply</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Recommended Jobs Section -->
+    <div>
+      <div class="flex justify-between items-center section-header" style="margin-bottom: 1.5rem;">
+        <div>
+          <h3 style="font-size: 1.25rem;">Recommended Opportunities for You</h3>
+          <p class="text-muted" style="font-size: 0.88rem; margin: 0;">Selected based on your skills and profile</p>
+        </div>
+        <a href="{{ url_for('jobs.index') }}" class="btn btn-outline btn-sm">Browse All Jobs &rarr;</a>
+      </div>
+
+      <div class="jobs-grid">
+        {% for job in recommended_jobs %}
+          <div class="job-card">
+            <div>
+              <div class="job-card-header">
+                <div class="flex items-center gap-3">
+                  <div class="company-badge-box">
+                    {{ job.company.company_name[0] | upper }}
+                  </div>
+                  <div>
+                    <h4 class="job-card-title">
+                      <a href="{{ url_for('jobs.details', job_id=job.id) }}">{{ job.job_title }}</a>
+                    </h4>
+                    <div class="job-company-name">{{ job.company.company_name }}</div>
+                  </div>
+                </div>
+                <span class="badge badge-info">{{ job.employment_type }}</span>
+              </div>
+
+              <div class="job-meta-list">
+                <div class="job-meta-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                  <span>{{ job.location }}</span>
+                </div>
+                <div>•</div>
+                <div class="job-meta-item">
+                  <span>{{ job.salary_display() }}</span>
+                </div>
+              </div>
+
+              <div class="job-skills-tags">
+                {% for skill in job.get_skills_list()[:3] %}
+                  <span class="skill-tag">{{ skill }}</span>
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="job-card-footer">
+              <span class="text-muted" style="font-size: 0.8rem;">Posted {{ job.created_at | timeago }}</span>
+              <a href="{{ url_for('jobs.details', job_id=job.id) }}" class="btn btn-outline-primary btn-sm">View & Apply</a>
+            </div>
+          </div>
+        {% else %}
+          <p class="text-muted">No additional job recommendations at this time.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+  </main>
+</div>
+{% endblock %}

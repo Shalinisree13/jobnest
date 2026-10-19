@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account – JobNest{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 4rem 1.5rem;">
+  <div style="max-width: 520px; margin: 0 auto;">
+    
+    <div class="card">
+      <div class="card-body" style="padding: 2.25rem 2rem;">
+        <div class="text-center" style="margin-bottom: 2rem;">
+          <h2 style="font-size: 1.85rem; margin-bottom: 0.5rem;">Create Your Account</h2>
+          <p class="text-muted" style="font-size: 0.95rem;">Join JobNest as a Job Seeker or Employer</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('auth.register') }}">
+          {{ form.hidden_tag() }}
+
+          <div class="form-group">
+            <label class="form-label" for="role">
+              I want to register as <span class="required">*</span>
+            </label>
+            {{ form.role(class="form-select", id="role") }}
+            {% for error in form.role.errors %}
+              <span class="form-error">{{ error }}</span>
+            {% endfor %}
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="full_name">
+              Full Name / Contact Name <span class="required">*</span>
+            </label>
+            {{ form.full_name(class="form-control", id="full_name", placeholder="e.g. Jane Doe or Alex Smith") }}
+            {% for error in form.full_name.errors %}
+              <span class="form-error">{{ error }}</span>
+            {% endfor %}
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="email">
+              Email Address <span class="required">*</span>
+            </label>
+            {{ form.email(class="form-control", id="email", placeholder="name@company.com or personal email") }}
+            {% for error in form.email.errors %}
+              <span class="form-error">{{ error }}</span>
+            {% endfor %}
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">
+              Password (Min. 6 characters) <span class="required">*</span>
+            </label>
+            {{ form.password(class="form-control", id="password", placeholder="Create a secure password") }}
+            {% for error in form.password.errors %}
+              <span class="form-error">{{ error }}</span>
+            {% endfor %}
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="confirm_password">
+              Confirm Password <span class="required">*</span>
+            </label>
+            {{ form.confirm_password(class="form-control", id="confirm_password", placeholder="Repeat your password") }}
+            {% for error in form.confirm_password.errors %}
+              <span class="form-error">{{ error }}</span>
+            {% endfor %}
+          </div>
+
+          <div style="margin-top: 1.75rem;">
+            {{ form.submit(class="btn btn-primary btn-block btn-lg") }}
+          </div>
+        </form>
+
+        <div class="text-center" style="margin-top: 1.5rem; font-size: 0.92rem; color: var(--text-muted);">
+          Already have an account? 
+          <a href="{{ url_for('auth.login') }}" style="font-weight: 600;">Sign in here</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

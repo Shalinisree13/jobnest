@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}Administrator Portal – JobNest{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+
+  <!-- Sidebar -->
+  <aside class="dashboard-sidebar">
+    <div class="sidebar-profile">
+      <div class="sidebar-avatar" style="background: linear-gradient(135deg, #ef4444, #b91c1c);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+      </div>
+      <div class="sidebar-user-info">
+        <h4>{{ current_user.full_name }}</h4>
+        <span class="sidebar-user-role" style="color: var(--danger); font-weight: 700;">System Administrator</span>
+      </div>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li class="sidebar-item active">
+        <a href="{{ url_for('admin.dashboard') }}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          Overview & Stats
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a href="{{ url_for('admin.users') }}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          Manage Users
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a href="{{ url_for('admin.jobs') }}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+          Moderate Job Listings
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a href="{{ url_for('jobs.index') }}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          Public Portal
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div style="font-size: 0.8rem; color: var(--text-light); margin-bottom: 0.75rem;">
+        Security Level: SuperAdmin
+      </div>
+      <a href="{{ url_for('auth.logout') }}" class="btn btn-outline btn-sm btn-block text-danger">Sign Out</a>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="dashboard-main">
+    
+    <div class="dashboard-header">
+      <div class="dashboard-title-area">
+        <h1>Administrator Control Center</h1>
+        <p>Real-time platform activity metrics, user governance, and job moderation</p>
+      </div>
+      <div class="flex gap-2">
+        <a href="{{ url_for('admin.users') }}" class="btn btn-outline">User Directory</a>
+        <a href="{{ url_for('admin.jobs') }}" class="btn btn-primary">Moderate Jobs</a>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-info">
+          <p>Total Registered Users</p>
+          <h3>{{ total_users }}</h3>
+        </div>
+        <div class="stat-icon blue">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-info">
+          <p>Candidates</p>
+          <h3>{{ total_seekers }}</h3>
+        </div>
+        <div class="stat-icon cyan">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-info">
+          <p>Employers</p>
+          <h3>{{ total_employers }}</h3>
+        </div>
+        <div class="stat-icon purple">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-info">
+          <p>Active Job Vacancies</p>
+          <h3>{{ active_jobs }} <span style="font-size: 1rem; color: var(--text-muted); font-weight: 500;">/ {{ total_jobs }}</span></h3>
+        </div>
+        <div class="stat-icon green">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-info">
+          <p>Applications Processed</p>
+          <h3>{{ total_applications }}</h3>
+        </div>
+        <div class="stat-icon yellow">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analytics Charts Grid -->
+    <div class="charts-grid">
+      <!-- Status Doughnut Chart -->
+      <div class="chart-card">
+        <h3>Application Status Distribution</h3>
+        <div class="chart-container">
+          <canvas id="adminStatusChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Category Bar Chart -->
+      <div class="chart-card">
+        <h3>Vacancies By Industry Category</h3>
+        <div class="chart-container">
+          <canvas id="adminCategoryChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Platform Audit Activity Log Feed -->
+    <div class="card" style="margin-bottom: 2.5rem;">
+      <div class="card-header">
+        <h3 style="font-size: 1.15rem;">Live Platform Audit Trail</h3>
+        <span class="badge badge-info">Real-time Activity</span>
+      </div>
+      <div class="card-body">
+        <ul class="activity-list">
+          {% for act in activities %}
+            <li class="activity-item">
+              <div class="activity-dot"></div>
+              <div class="activity-content">
+                <p>
+                  <strong>{{ act.action.replace('_', ' ') }}:</strong> {{ act.description }}
+                </p>
+                <div class="activity-time">{{ act.created_at | timeago }}</div>
+              </div>
+            </li>
+          {% else %}
+            <li class="text-muted">No activity logs recorded yet.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+  </main>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const statusData = {{ status_dict | tojson }};
+    const categoryData = {
+      labels: {{ categories_list | tojson }},
+      counts: {{ categories_counts | tojson }}
+    };
+    initAdminCharts(statusData, categoryData);
+  });
+</script>
+{% endblock %}
