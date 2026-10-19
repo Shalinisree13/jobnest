@@ -10,7 +10,7 @@ class Config:
     os.makedirs(INSTANCE_DIR, exist_ok=True)
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         'DATABASE_URL', 
-        f"sqlite:///{os.path.join(INSTANCE_DIR, 'jobnest.db').replace('\\', '/')}"
+        /"sqlite:///{os.path.join(INSTANCE_DIR, 'jobnest.db').replace('\\', '/')}"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
