@@ -7,12 +7,15 @@ class Config:
     
     # SQLite Database location in instance/ folder
     INSTANCE_DIR = os.path.join(BASE_DIR, 'instance')
-    os.makedirs(INSTANCE_DIR, exist_ok=True)
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        'DATABASE_URL', 
-        /"sqlite:///{os.path.join(INSTANCE_DIR, 'jobnest.db').replace('\\', '/')}"
-    )
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+   os.makedirs(INSTANCE_DIR, exist_ok=True)
+
+# Fix the path before putting it in the f-string
+db_path = os.path.join(INSTANCE_DIR, 'jobnest.db').replace('\\', '/')
+
+SQLALCHEMY_DATABASE_URI = os.environ.get(
+    'DATABASE_URL',
+    f"sqlite:///{db_path}"
+)
     
     # Upload settings
     UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads', 'resumes')
