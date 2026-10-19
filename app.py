@@ -1,7 +1,9 @@
 import os
-from datetime import datetime, timezone, date
-from flask import Flask, render_template
-from flask_wtf.csrf import CSRFProtect
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 10000))
+    app.run(host='0.0.0.0', port=port)
+
 
 from config import Config
 from models import db, User

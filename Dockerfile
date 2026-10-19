@@ -26,4 +26,4 @@ RUN mkdir -p instance uploads/resumes
 EXPOSE 5000
 
 # Run entrypoint script or Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "--timeout", "120", "app:app"]
+CMD gunicorn --bind 0.0.0.0:$PORT app:app
